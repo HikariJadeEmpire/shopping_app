@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
     // BuildContext is to tell the Flutter how widget tree is structed
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
+      title: 'Shopping App',
       home: ShoppingApp(),
     );
   }
