@@ -27,5 +27,10 @@ Color getColor(enumthemeColr) {
     }
 }
 
-//// SilverappBar
-
+Icon changeView(crs) {
+    if (crs = true) {
+      return Icon(Icons.apps);
+    } else {
+      return Icon(Icons.width_full_outlined);
+    }
+  }
