@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 
 enum ThemeColr {
-  primary,
-  secondary,
   hilightPrimary,
   hilightSecondary,
   }
 
 Color getColor(enumthemeColr) {
     switch (enumthemeColr) {
-      case ThemeColr.primary: {
-        return Color.fromRGBO(255, 255, 255, 1);
-      }
-      case ThemeColr.secondary: {
-        return Color.fromRGBO(19, 19, 20, 1);
-      }
       case ThemeColr.hilightPrimary: {
         return Color.fromRGBO(235, 235, 233, 0.2);
       }
@@ -28,17 +20,159 @@ Color getColor(enumthemeColr) {
 }
 
 Icon changeView(crs) {
-    if (crs = true) {
+    if (crs == true) {
       return Icon(Icons.apps);
     } else {
       return Icon(Icons.width_full_outlined);
     }
   }
 
+List<Widget> getRelevantProd(String filter, List allproduct) {
+
+  List matchList = [];
+  for (int ll = 0; ll < allproduct.length; ll++) {
+    List item = allproduct[ll]['label'];
+    for (int alllabel = 0; alllabel < item.length; alllabel++) {
+      String labelinside = allproduct[ll]['label'][alllabel];
+      if (labelinside == filter) {
+        matchList.add(allproduct[ll]);
+        break;
+      }
+    }
+    
+  }
+  return List<CarouselItem>.generate(matchList.length, (int index) {
+    return 
+      CarouselItem(
+        imgs: matchList[index]['imgUrl'],
+        itemname: matchList[index]['title'],
+        itemPrice: matchList[index]['price'],
+        voidFunc: () {
+          debugPrint('${matchList[index]['title']} clicked');
+          // TODO: on item click
+          },
+        );
+    }
+  );
+
+}
+
+List<String> categories = ['All', 'Cap', 'Glasses', 'Shoes'];
+
+List productDetails = [
+  {
+    'id':'s001',
+    'label':['Shoes', 'All'],
+    'title':'Cloud walker',
+    'price': 1400.0,
+    'size': [for (double i=6; i<15; i+=0.5) i],
+    'imgUrl':'assets/images/shoes.jpg'
+  },
+  {
+    'id':'s002',
+    'label':['Shoes', 'All'],
+    'title':'Soft slipper',
+    'price': 1100.0,
+    'size': [for (double i=6; i<15; i+=0.5) i],
+    'imgUrl':'assets/images/shoes1.jpg'
+  },
+  {
+    'id':'s003',
+    'label':['Shoes', 'All'],
+    'title':'Springers slip',
+    'price': 900.0,
+    'size': [for (double i=6; i<15; i+=0.5) i],
+    'imgUrl':'assets/images/shoes2.jpg'
+  },
+  {
+    'id':'s004',
+    'label':['Shoes', 'All'],
+    'title':'WILD Soft slipper',
+    'price': 800.0,
+    'size': [for (double i=6; i<15; i+=0.5) i],
+    'imgUrl':'assets/images/shoes3.jpg'
+  },
+
+  {
+    'id':'c001',
+    'label':['Cap', 'All'],
+    'title':'Cold x Wind x UV protection hat',
+    'price': 1600.0,
+    'size': ['S', 'M', 'L', 'XL'],
+    'imgUrl':'assets/images/cap.jpg'
+  },
+  {
+    'id':'c002',
+    'label':['Cap', 'All'],
+    'title':'Hot x UV protection hat',
+    'price': 1000.0,
+    'size': ['S', 'M', 'L', 'XL'],
+    'imgUrl':'assets/images/cap1.jpg'
+  },
+  {
+    'id':'c003',
+    'label':['Cap', 'All'],
+    'title':'Super speed hat',
+    'price': 700.0,
+    'size': ['S', 'M', 'L', 'XL'],
+    'imgUrl':'assets/images/cap2.jpg'
+  },
+  {
+    'id':'c004',
+    'label':['Cap', 'All'],
+    'title':'Heat & Glare protection cap',
+    'price': 700.0,
+    'size': ['S', 'M', 'L', 'XL'],
+    'imgUrl':'assets/images/cap3.jpg'
+  },
+
+  {
+    'id':'g001',
+    'label':['Glasses', 'All'],
+    'title':'Un-Functional UV protection glasses',
+    'price': 200.0,
+    'size': ['One-sized'],
+    'imgUrl':'assets/images/glasses.jpg'
+  },
+  {
+    'id':'g002',
+    'label':['Glasses', 'All'],
+    'title':'Intel GAINER Glasses',
+    'price': 3500.0,
+    'size': ['S', 'M', 'L'],
+    'imgUrl':'assets/images/glasses1.jpg'
+  },
+  {
+    'id':'g003',
+    'label':['Glasses', 'All'],
+    'title':'SOFT Winter protection glasses',
+    'price': 850.0,
+    'size': ['S', 'M', 'L'],
+    'imgUrl':'assets/images/glasses2.jpg'
+  },
+  {
+    'id':'g004',
+    'label':['Glasses', 'All'],
+    'title':'DIRT x UV Protection glasses',
+    'price': 750.0,
+    'size': ['S', 'M', 'L'],
+    'imgUrl':'assets/images/glasses3.jpg'
+  },
+  {
+    'id':'g005',
+    'label':['Glasses', 'All'],
+    'title':'UV Protection glasses (LIGHT)',
+    'price': 600.0,
+    'size': ['S', 'M', 'L'],
+    'imgUrl':'assets/images/glasses4.jpg'
+  },
+];
+
 class CarouselItem extends StatelessWidget {
 
   final String imgs;
   final String itemname;
+  final double itemPrice;
   final VoidCallback voidFunc;
 
   const CarouselItem({
@@ -46,6 +180,7 @@ class CarouselItem extends StatelessWidget {
     required this.imgs,
     required this.itemname,
     required this.voidFunc,
+    required this.itemPrice,
     });
 
   @override
@@ -83,7 +218,7 @@ class CarouselItem extends StatelessWidget {
 
         Container(
           margin: EdgeInsets.all(5),
-          height: 40,
+          height: 26,
           decoration: BoxDecoration(
             // color: Colors.teal,
             borderRadius: BorderRadius.all(Radius.circular(20)),),
@@ -92,6 +227,22 @@ class CarouselItem extends StatelessWidget {
             itemname,
             style: TextStyle(
               fontSize: 14,
+            ),
+          ),
+        ),
+
+        Container(
+          margin: EdgeInsets.all(5),
+          height: 26,
+          decoration: BoxDecoration(
+            // color: Colors.teal,
+            borderRadius: BorderRadius.all(Radius.circular(20)),),
+        
+          child: Text(
+            '$itemPrice THB',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

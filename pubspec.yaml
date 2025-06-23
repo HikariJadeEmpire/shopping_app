@@ -13,9 +13,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
+  # google_fonts: ^6.2.1
   carousel_slider: ^5.0.0
-  http: ^1.4.0
+  # http: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -29,21 +29,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/cap.jpg
-    - assets/images/cap1.jpg
-    - assets/images/cap2.jpg
-    - assets/images/cap3.jpg
-
-    - assets/images/glasses.jpg
-    - assets/images/glasses1.jpg
-    - assets/images/glasses2.jpg
-    - assets/images/glasses3.jpg
-    - assets/images/glasses4.jpg
-
-    - assets/images/shoes.jpg
-    - assets/images/shoes1.jpg
-    - assets/images/shoes2.jpg
-    - assets/images/shoes3.jpg
+    - assets/images/
 
 
   # To add custom fonts to your application, add a fonts section here,

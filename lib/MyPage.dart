@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+// import 'package:google_fonts/google_fonts.dart';
 
 import 'MyComponents.dart';
 
@@ -20,53 +19,51 @@ class _ShoppingAppState extends State<ShoppingApp> {
   final bool _snap = false;
   final bool _floating = true;
 
-  bool haveCartItems = false;
-  int nCartItems = 0;
-  bool crs = true;
+  late bool haveCartItems;
+  late int nCartItems;
+
+  late String selectedFilter;
+  late List<Widget> prodList = getRelevantProd(selectedFilter, productDetails);
+
+  // late bool crs;
+  // late Icon crsIcon;
 
   final SearchController searchController = SearchController();
 
   @override
   void initState() {
     super.initState();
-    getApi();
+
+    selectedFilter = categories[0];
+    prodList = getRelevantProd(selectedFilter, productDetails);
+
+    // crs = true;
+    // crsIcon = changeView(crs);
+
+    haveCartItems = false;
+    nCartItems = 0;
+
+    searchController.text = '';
+
   }
 
-  Future getApi() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 0;
-  }
-
-  void curView() {
-    if (crs == true) {
-      crs = false;
-      }
-    else {
-      crs = true;
-    }
-  }
+  // bool curView() {
+  //   if (crs == true) {
+  //     return false;
+  //     }
+  //   else {
+  //     return true;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
-      backgroundColor: getColor(ThemeColr.primary),
-      drawerScrimColor: getColor(ThemeColr.secondary),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      drawerScrimColor: Theme.of(context).colorScheme.onPrimary,
       
-      body:  
-        FutureBuilder(
-          future: getApi(),
-          builder: (context, asyncSnapshot) {
-
-            debugPrint('${asyncSnapshot.connectionState}');
-
-            if (asyncSnapshot.hasError) {
-              return Center(
-                child: Text(asyncSnapshot.error.toString()),
-              );
-            }
-
-            return SafeArea(
+      body: SafeArea(
               child: CustomScrollView(
               slivers : <Widget>[
                 
@@ -80,8 +77,8 @@ class _ShoppingAppState extends State<ShoppingApp> {
                   expandedHeight: 100,
                   collapsedHeight: 70,
               
-                  backgroundColor: getColor(ThemeColr.primary),
-                  surfaceTintColor: getColor(ThemeColr.primary),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  surfaceTintColor: Theme.of(context).colorScheme.primary,
                   
                   actions: [
               
@@ -125,9 +122,9 @@ class _ShoppingAppState extends State<ShoppingApp> {
                   ],
               
                   leading: SearchAnchor(
-                      viewBackgroundColor: getColor(ThemeColr.primary),
-                      viewSurfaceTintColor: getColor(ThemeColr.primary),
-                      dividerColor: getColor(ThemeColr.primary),
+                      viewBackgroundColor: Theme.of(context).colorScheme.primary,
+                      viewSurfaceTintColor: Theme.of(context).colorScheme.primary,
+                      dividerColor: Theme.of(context).colorScheme.primary,
                     
                       shrinkWrap: false,
                       isFullScreen: true,
@@ -136,6 +133,9 @@ class _ShoppingAppState extends State<ShoppingApp> {
                       headerTextStyle: TextStyle(
                           fontFamily: 'Inconsolata',
                         ),
+
+                      textInputAction: TextInputAction.search,
+
                       viewLeading: Container(
                         margin: EdgeInsets.all(6),
                         child: IconButton(
@@ -164,24 +164,53 @@ class _ShoppingAppState extends State<ShoppingApp> {
                         );
                       },
                       suggestionsBuilder: (BuildContext context, SearchController controller) {
-                        return List<ListTile>.generate(5, (int index) {
-                          final String item = 'item $index';
+                        if (controller.text == '') {
+                          return List<ListTile>.generate(productDetails.length, (int index) {
+                            final String item = '${productDetails[index]['title']}.';
+                            return ListTile(
+                
+                              title: Text(
+                                item,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  ),
+                                // selectionColor: getColor(ThemeColr.hilightPrimary),
+                                ),
+                              onTap: () {
+                                setState(() {
+                                  
+                                  debugPrint(item);
+                                  controller.closeView('');
+                                  // TODO: on select search items
+
+                                });
+                              },
+                
+                            );
+                          });
+                        }
+
+                        List matchList = [];
+                        for (int ll = 0; ll < productDetails.length; ll++) {
+                          String item = productDetails[ll]['title'];
+                          RegExp regExp = RegExp(controller.text, caseSensitive: false);
+                          bool match = regExp.hasMatch(item);
+
+                          if (match) {
+                            matchList.add(item);
+                          }
+                          
+                        }
+
+                        return List<ListTile>.generate(matchList.length, (int index) {
+                          final String item = '${matchList[index]}.';
                           return ListTile(
-              
-                            // selectedColor: getColor(ThemeColr.hilightPrimary),
-                            // selectedTileColor: getColor(ThemeColr.hilightPrimary),
-                            // splashColor: getColor(ThemeColr.hilightPrimary),
-                            // hoverColor: getColor(ThemeColr.primary),
-                            // focusColor: getColor(ThemeColr.primary),
-                            // tileColor: getColor(ThemeColr.primary),
-              
                             title: Text(
                               item,
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.inconsolata(
-                                fontSize: 18,
-                                // color: getColor(ThemeColr.secondary),
-                                fontWeight: FontWeight.normal,
+                              style: TextStyle(
+                                fontSize: 15,
                                 ),
                               // selectionColor: getColor(ThemeColr.hilightPrimary),
                               ),
@@ -194,9 +223,10 @@ class _ShoppingAppState extends State<ShoppingApp> {
 
                               });
                             },
-              
                           );
-                        });
+
+                      });
+                      
                       },
                     ),
                   
@@ -234,55 +264,80 @@ class _ShoppingAppState extends State<ShoppingApp> {
                           height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 12,
+                            spacing: 4,
                             children: [
               
                               SizedBox(
-                                width: 50,
-                                child: IconButton(
-                                  highlightColor: getColor(ThemeColr.hilightPrimary),
-                                  padding: EdgeInsets.all(2),
-                                  onPressed: () {
-                                    debugPrint('filter.');
-                                    setState(() {
-                                      // TODO: on filter
-                                    });
-                                  },
-                                  icon: Icon(Icons.filter_alt_rounded),
-                                  splashRadius: 8,
-                                
-                                  iconSize: 25,
-                                
+                                width: 40,
+                                child: Icon(Icons.filter_alt_rounded),
+                              ),
+
+                              SizedBox(
+                                width: 260,
+                                child: ListView.builder(
+
+                                  itemCount: categories.length,
+                                  scrollDirection: Axis.horizontal,
+                                  padding: EdgeInsets.all(4),
+
+                                  itemBuilder: (context, index) {
+
+                                    final filter = categories[index];
+
+                                    return Padding(
+                                      padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedFilter = filter;
+                                            prodList = getRelevantProd(selectedFilter, productDetails);
+                                          });
+                                          debugPrint('filter: $filter selected');
+                                        },
+                                        child: Chip(
+                                          backgroundColor: selectedFilter == filter
+                                            ? Theme.of(context).colorScheme.secondary
+                                            : Theme.of(context).colorScheme.primary,
+                                          side: BorderSide(
+                                            color: getColor(ThemeColr.hilightSecondary),
+                                            width: 0.8,
+                                          ),
+                                          label: Text(
+                                            filter,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: selectedFilter == filter
+                                                ? Theme.of(context).colorScheme.primary
+                                                : Theme.of(context).colorScheme.secondary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 ),
                               ),
-                              SizedBox(
-                                width: 120,
-                                child: Text(
-                                    'Filters',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                child: IconButton(
-                                  padding: EdgeInsets.all(2),
-                                  onPressed: () {
-                                    debugPrint('View changed.');
-                                    setState(() {
-                                      getApi();  // Re-fetch data
-                                      curView();
-                                    });
-                                    debugPrint('is carousel : $crs');
-                                  },
-                                  icon: changeView(crs),
-                                  splashRadius: 8,
+
+                              // SizedBox(
+                              //   width: 50,
+                              //   child: IconButton(
+                              //     padding: EdgeInsets.all(2),
+                              //     onPressed: () {
+
+                              //       debugPrint('[ View changed ] is carousel : $crs');
+                              //       setState(() {
+                              //         crs = curView();
+                              //         crsIcon = changeView(crs);
+                              //       });
+
+                              //     },
+                              //     icon: crsIcon,
+                              //     splashRadius: 8,
                                 
-                                  iconSize: 25,
+                              //     iconSize: 25,
                                 
-                                ),
-                              ),
+                              //   ),
+                              // ),
               
                             ],
                           ),
@@ -290,27 +345,15 @@ class _ShoppingAppState extends State<ShoppingApp> {
                         
                         SizedBox(
                           // color: getColor(ThemeColr.hilightSecondary),
-                          height: 460,
+                          height: 480,
                           // width: 350,
               
                           child: CarouselSlider(
-                              items: [
-              
-                                CarouselItem(
-                                  imgs: 'assets/images/shoes.jpg',
-                                  itemname: 'Comfy shoes',
-                                  voidFunc: () {
-                                    debugPrint('shoes clicked');
-                                    // TODO: on item click
-                                  },
-                                  ),
-                                // TODO: listView.itemBuilder() - Get all images
-              
-                              ],
+                              items: prodList,
                             
                             //Slider Container properties
                             options: CarouselOptions(
-                              height: 440.0,
+                              height: 464.0,
               
                               enlargeCenterPage: true,
                               enlargeFactor: 0.3,
@@ -336,10 +379,8 @@ class _ShoppingAppState extends State<ShoppingApp> {
               
               ],
             ),
-          );
-        }
-      ),
-    
+          ),
+
     bottomNavigationBar: Container(
       color: Theme.of(context).colorScheme.secondary,
       height: 100,
