@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/DetailPage.dart';
 import 'package:shopping_app/MyPage.dart';
+
+import 'MyComponents.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
           ),
         fontFamily: 'Inconsolata',
       ),
-      home: ShoppingApp(),
+      home: DetailsPage(products: productDetails[11]),
     );
   }
 }

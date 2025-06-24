@@ -345,7 +345,7 @@ class _ShoppingAppState extends State<ShoppingApp> {
                         
                         SizedBox(
                           // color: getColor(ThemeColr.hilightSecondary),
-                          height: 480,
+                          height: 490,
                           // width: 350,
               
                           child: CarouselSlider(
@@ -353,7 +353,7 @@ class _ShoppingAppState extends State<ShoppingApp> {
                             
                             //Slider Container properties
                             options: CarouselOptions(
-                              height: 464.0,
+                              height: 470.0,
               
                               enlargeCenterPage: true,
                               enlargeFactor: 0.3,
