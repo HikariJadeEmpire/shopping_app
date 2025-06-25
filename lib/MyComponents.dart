@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'DetailPage.dart';
 
 enum ThemeColr {
   hilightPrimary,
@@ -27,7 +28,7 @@ Icon changeView(crs) {
     }
   }
 
-List<Widget> getRelevantProd(String filter, List allproduct) {
+List<Widget> getRelevantProd(context, String filter, List allproduct, Function func) {
 
   List matchList = [];
   for (int ll = 0; ll < allproduct.length; ll++) {
@@ -48,8 +49,30 @@ List<Widget> getRelevantProd(String filter, List allproduct) {
         itemname: matchList[index]['title'],
         itemPrice: matchList[index]['price'],
         voidFunc: () {
+
           debugPrint('${matchList[index]['title']} clicked');
-          // TODO: on item click
+          int n = 0;
+          for (int findIndex = 0; findIndex < productDetails.length; findIndex++) {
+                  if (productDetails[findIndex]['id'] == matchList[index]['id']) {
+                    n = findIndex;
+                    break;
+                  }
+                }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return DetailsPage(
+                  products: productDetails[n],
+                  );
+                }
+            ),
+          ).then((ns) {
+            if (ns != null) {
+              func();
+            }
+          });
+          
           },
         );
     }
@@ -181,6 +204,17 @@ List productDetails = [
   },
 ];
 
+List oncart = [];
+
+List getNonCart() {
+  if (oncart.isNotEmpty) {
+    return [oncart.length, true];
+  }
+  else {
+    return [0, false];
+  }
+}
+
 class CarouselItem extends StatelessWidget {
 
   final String imgs;
@@ -205,7 +239,7 @@ class CarouselItem extends StatelessWidget {
           height: 300,
           decoration: BoxDecoration(
             // color: Colors.teal,
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withValues(alpha: 0.3),
@@ -220,7 +254,7 @@ class CarouselItem extends StatelessWidget {
 
             onTap: voidFunc,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               child: Image.asset(
                 imgs,
                 fit: BoxFit.cover,
