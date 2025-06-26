@@ -215,6 +215,205 @@ List getNonCart() {
   }
 }
 
+Map getCartItem(n) {
+  if (oncart.isNotEmpty) {
+    return oncart[n];
+  }
+  else {
+    return {
+      'product_id': null,
+      'product': 'Your cart is empty',
+      'selectedSize': null,
+      'isChecked': false,
+      'amount': 0,
+    };
+  }
+}
+
+class CartItem extends StatefulWidget {
+
+  late Map cartItem;
+
+  CartItem({
+    super.key,
+    required this.cartItem,
+    });
+
+  @override
+  State<CartItem> createState() {
+    return _CartItemState();
+    }
+}
+
+class _CartItemState extends State<CartItem> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+
+        final ccartItem = widget.cartItem;
+
+        if (ccartItem['product_id'] == null) {
+              return Center(
+                heightFactor: 16,
+                child: Text(
+                  ccartItem['product'],
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                )
+              );
+            }
+            
+        return Container(
+          // color: getColor(ThemeColr.hilightSecondary),
+          height: 180,
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+          child: Row(
+            children: [
+        
+              Container(
+                margin: EdgeInsets.all(0),
+                width: 38,
+                child: IconButton(
+                  onPressed: () {
+                      // TODO: Check box
+                    },
+                  icon: Icon(
+                    Icons.check_box_outline_blank_rounded,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                  highlightColor: getColor(ThemeColr.hilightPrimary),
+                  ),
+                ),
+              Container(
+                padding: EdgeInsets.all(14),
+                width: 110,
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO : get to product page
+
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: Image.asset(
+                      widget.cartItem['product']['imgUrl'],
+                      fit: BoxFit.cover,
+                      ),
+                  ),
+                ),
+              ),
+              Container(
+                // color: getColor(ThemeColr.hilightSecondary),
+                height: 160,
+                width: 140,
+                margin: EdgeInsets.fromLTRB(18, 2, 5, 2),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 6,
+                  children: [
+        
+                    Text(
+                      widget.cartItem['product']['title'],
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    Text(
+                      'SIZE: ${widget.cartItem['selectedSize']}',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    Text(
+                      'THB ${widget.cartItem['product']['price']}',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        foreground: Paint()..shader = LinearGradient(
+                            colors: <Color>[
+                              Color.fromRGBO(99, 229, 197, 1), 
+                              Color.fromRGBO(20, 54, 111, 1)
+                              ],
+                          ).createShader(Rect.fromLTWH(0.0, 0.0, 108.0, 18.0))
+                        ),
+                      ),
+        
+                    Row(
+                      children: [
+        
+                        Container(
+                          margin: EdgeInsets.all(0),
+                          width: 40,
+                          child: IconButton(
+                            onPressed: () {
+                              if (widget.cartItem['amount'] >= 1) {
+                                widget.cartItem['amount']--;
+                              } else {
+                                // TODO: remove from cart
+                              }
+                                
+                              },
+                            icon: Icon(
+                              Icons.do_not_disturb_on_outlined,
+                              color: Theme.of(context).colorScheme.onSecondaryContainer,
+                              ),
+                            highlightColor: getColor(ThemeColr.hilightPrimary),
+                            ),
+                          ),
+                        SizedBox(
+                          width: 40,
+                          height: 30,
+                          child: Text(
+                            widget.cartItem['amount'].toString(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(0),
+                          width: 40,
+                          child: IconButton(
+                            onPressed: () {
+                                widget.cartItem['amount']++;
+                              },
+                            icon: Icon(
+                              Icons.add_circle_outline_rounded,
+                              color: Theme.of(context).colorScheme.onSecondaryContainer,
+                              ),
+                            highlightColor: getColor(ThemeColr.hilightPrimary),
+                            ),
+                          ),
+                        
+                      ],
+                    ),
+        
+                  ],
+                ),
+              ),
+        
+            ],
+          ),
+        );
+      }
+    );
+  }
+}
+
 class CarouselItem extends StatelessWidget {
 
   final String imgs;

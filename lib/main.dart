@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
           onPrimary: Color.fromRGBO(28, 38, 40, 1), 
           secondary: Color.fromRGBO(28, 38, 40, 1), 
           onSecondary: Color.fromRGBO(254, 250, 224, 1), 
+          onSecondaryContainer: Color.fromRGBO(28, 38, 40, 0.6),
           error: Color.fromRGBO(159, 184, 184, 1), 
           onError: Color.fromRGBO(28, 38, 40, 1), 
           surface: Color.fromRGBO(255, 255, 255, 1), 
