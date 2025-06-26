@@ -33,7 +33,7 @@ class _DetailsPageState extends State<DetailsPage> {
   void initState() {
     super.initState();
 
-    selectedSize = (widget.products['size']! as List)[0].toString();
+    selectedSize = 'NULL';
 
     haveCartItems = getNonCart()[1];
     nCartItems = getNonCart()[0];
@@ -226,10 +226,13 @@ class _DetailsPageState extends State<DetailsPage> {
                             margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                             child: IconButton(
                               onPressed: () {
-                                if (oncart.isNotEmpty) {
+                                if (selectedSize != 'NULL') {
+                                  if (oncart.isNotEmpty) {
                                   bool isInCart = false;
                                   for (int iCart = 0; iCart < oncart.length; iCart++) {
-                                    if (widget.products['id'] == oncart[iCart]['product_id']) {
+                                    if (widget.products['id'] == oncart[iCart]['product_id'] 
+                                    && widget.products['selectedSize'] == selectedSize) {
+                                      
                                       oncart[iCart]['amount']++;
                                       isInCart = true;
                                       break;
@@ -242,6 +245,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                       'selectedSize': selectedSize,
                                       'isChecked': false,
                                       'amount': 1,
+                                      'sumprice': widget.products['price'],
                                     });
                                   }
 
@@ -252,8 +256,12 @@ class _DetailsPageState extends State<DetailsPage> {
                                       'selectedSize': selectedSize,
                                       'isChecked': false,
                                       'amount': 1,
+                                      'sumprice': widget.products['price'],
                                     });
                                   }
+                                } else {
+                                  // TODO: popup to tell them that they have to select the size
+                                }
                                 
                                   setState(() {
 

@@ -48,24 +48,12 @@ class _ShoppingAppState extends State<ShoppingApp> {
     selectedFilter = categories[0];
     prodList = getRelevantProd(context, selectedFilter, productDetails, cartUpdate);
 
-    // crs = true;
-    // crsIcon = changeView(crs);
-
     haveCartItems = getNonCart()[1];
     nCartItems = getNonCart()[0];
 
     searchController.text = '';
 
   }
-
-  // bool curView() {
-  //   if (crs == true) {
-  //     return false;
-  //     }
-  //   else {
-  //     return true;
-  //   }
-  // }
   
   @override
   Widget build(BuildContext context) {
@@ -353,27 +341,6 @@ class _ShoppingAppState extends State<ShoppingApp> {
                             }
                           ),
                         ),
-        
-                        // SizedBox(
-                        //   width: 50,
-                        //   child: IconButton(
-                        //     padding: EdgeInsets.all(2),
-                        //     onPressed: () {
-        
-                        //       debugPrint('[ View changed ] is carousel : $crs');
-                        //       setState(() {
-                        //         crs = curView();
-                        //         crsIcon = changeView(crs);
-                        //       });
-        
-                        //     },
-                        //     icon: crsIcon,
-                        //     splashRadius: 8,
-                          
-                        //     iconSize: 25,
-                          
-                        //   ),
-                        // ),
         
                       ],
                     ),

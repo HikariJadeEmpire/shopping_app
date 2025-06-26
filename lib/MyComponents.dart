@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'DetailPage.dart';
+
+class CartProvider extends ChangeNotifier {
+  double totprice = gettotal();
+
+  void updatetot() {
+    totprice = gettotal();
+    notifyListeners();
+  }
+}
 
 enum ThemeColr {
   hilightPrimary,
@@ -19,14 +29,6 @@ Color getColor(enumthemeColr) {
       }
     }
 }
-
-Icon changeView(crs) {
-    if (crs == true) {
-      return Icon(Icons.apps);
-    } else {
-      return Icon(Icons.width_full_outlined);
-    }
-  }
 
 List<Widget> getRelevantProd(context, String filter, List allproduct, Function func) {
 
@@ -204,6 +206,30 @@ List productDetails = [
   },
 ];
 
+double gettotal() {
+    double totprice = 0.00; 
+    if (oncart.isNotEmpty) {
+      for (int i = 0; i < oncart.length; i++) {
+        if (oncart[i]['isChecked'] == true) {
+          totprice += (oncart[i]['product']['price'] * oncart[i]['amount']);
+        }
+      }
+      return totprice;
+    } else {
+      return totprice;
+    }
+  }
+
+void clearCart() {
+  if (oncart.isNotEmpty) {
+      for (int i = 0; i < oncart.length; i++) {
+        if (oncart[i]['isChecked'] == true) {
+          oncart[i]['isChecked'] = false;
+        }
+      }
+  }
+}
+
 List oncart = [];
 
 List getNonCart() {
@@ -222,19 +248,45 @@ Map getCartItem(n) {
   else {
     return {
       'product_id': null,
-      'product': 'Your cart is empty',
+      'product': 'Your cart \nis \nempty',
       'selectedSize': null,
       'isChecked': false,
       'amount': 0,
+      'sumprice':0.00,
     };
   }
 }
 
+List<Widget> getCart(context, List cart) {
+
+  if (getNonCart()[0] == 0) {
+    return [CartItem(
+      cartItem: getCartItem(0),
+    )];
+  } else {
+    return List<CartItem>.generate(cart.length, (int index) {
+      return CartItem(
+        cartItem: getCartItem(index),
+        );
+      }
+    );
+  }
+
+}
+
+IconData changeView(crs) {
+    if (crs == true) {
+      return Icons.check_box_rounded;
+    } else {
+      return Icons.check_box_outline_blank_rounded;
+    }
+  }
+
 class CartItem extends StatefulWidget {
 
-  late Map cartItem;
+  final Map cartItem;
 
-  CartItem({
+  const CartItem({
     super.key,
     required this.cartItem,
     });
@@ -247,6 +299,18 @@ class CartItem extends StatefulWidget {
 
 class _CartItemState extends State<CartItem> {
 
+  late bool isChecked;
+  late int nitem;
+
+  @override
+  void initState() {
+    super.initState();
+
+    isChecked = false;
+    nitem = widget.cartItem['amount'];
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -256,7 +320,8 @@ class _CartItemState extends State<CartItem> {
 
         if (ccartItem['product_id'] == null) {
               return Center(
-                heightFactor: 16,
+                heightFactor: 5.8,
+                widthFactor: 2,
                 child: Text(
                   ccartItem['product'],
                   style: TextStyle(
@@ -279,11 +344,20 @@ class _CartItemState extends State<CartItem> {
                 width: 38,
                 child: IconButton(
                   onPressed: () {
-                      // TODO: Check box
+                      setState(() {
+                        if (widget.cartItem['isChecked'] == false) {
+                          widget.cartItem['isChecked'] = true;
+                        } else {
+                          widget.cartItem['isChecked'] = false;
+                        }
+                        });
+                        Provider.of<CartProvider>(context, listen: false).updatetot();
                     },
                   icon: Icon(
-                    Icons.check_box_outline_blank_rounded,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    changeView(widget.cartItem['isChecked']),
+                    color: isChecked == true
+                    ? Theme.of(context).colorScheme.onSecondaryContainer
+                    : Theme.of(context).colorScheme.onSecondaryContainer,
                     ),
                   highlightColor: getColor(ThemeColr.hilightPrimary),
                   ),
@@ -357,12 +431,13 @@ class _CartItemState extends State<CartItem> {
                           width: 40,
                           child: IconButton(
                             onPressed: () {
-                              if (widget.cartItem['amount'] >= 1) {
+                              if (widget.cartItem['amount'] > 1) {
                                 widget.cartItem['amount']--;
-                              } else {
-                                // TODO: remove from cart
                               }
-                                
+                              setState(() {
+                                nitem = widget.cartItem['amount'];
+                              });
+                              Provider.of<CartProvider>(context, listen: false).updatetot();
                               },
                             icon: Icon(
                               Icons.do_not_disturb_on_outlined,
@@ -390,6 +465,10 @@ class _CartItemState extends State<CartItem> {
                           child: IconButton(
                             onPressed: () {
                                 widget.cartItem['amount']++;
+                                setState(() {
+                                  nitem = widget.cartItem['amount'];
+                                });
+                                Provider.of<CartProvider>(context, listen: false).updatetot();
                               },
                             icon: Icon(
                               Icons.add_circle_outline_rounded,
