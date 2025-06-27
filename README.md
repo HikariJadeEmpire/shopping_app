@@ -13,5 +13,5 @@ This project is a starting point for a Flutter application.
 | Programming environment | ```Flutter``` |
 | The main feature of the app | Demonstration of mobile shopping application |
 | Minimum version of android required | ```Android 10.0``` |
-| Android ```.apk``` file | Here |
+| Android ```.apk``` file | [ Click here ](https://github.com/HikariJadeEmpire/shopping_app/blob/main/app-release.apk) |
 | Difficulty to make | Easy - Medium |
