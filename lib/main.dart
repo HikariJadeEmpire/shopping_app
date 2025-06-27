@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: true,
-        title: 'Shopping App',
+        title: 'DMO Shop',
         theme: ThemeData(
           colorScheme: ColorScheme(
             brightness: Brightness.light, 
