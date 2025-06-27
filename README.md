@@ -1,16 +1,17 @@
-# shopping_app
+# Demo shopping app
 
-A new Flutter project.
+Goals : To learn how to manage state in flutter application
 
-## Getting Started
+## Screenshots
 
 This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Details
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Topic  | Description |
+| ------------- | ------------- |
+| Programming environment | ```Flutter``` |
+| The main feature of the app | Demonstration of mobile shopping application |
+| Minimum version of android required | ```Android 10.0``` |
+| Android ```.apk``` file | Here |
+| Difficulty to make | Easy - Medium |
