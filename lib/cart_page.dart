@@ -84,7 +84,7 @@ class _CartPageState extends State<CartPage> {
               children: getCart(
                 context, 
                 oncart,
-                )
+                ),
               
           )
         )
@@ -163,9 +163,38 @@ class _CartPageState extends State<CartPage> {
                   width: 140,
                   child: GestureDetector(
                     onTap: () {
-                      setState(() {
-                        // TODO: On buy
-                      });
+                      
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            elevation: 0,
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                            
+                            showCloseIcon: true,
+                            closeIconColor: Theme.of(context).colorScheme.onSecondary,
+                            content: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                Provider.of<CartProvider>(context, listen: false).totprice == 0.00
+                                ? 'You haven\'t selected any items of your cart.'
+                                : 'The DEMO has ended here. Thanks for trying',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).colorScheme.onSecondary,
+                                ),
+                                ),
+                            ),
+                            duration: const Duration(seconds: 2),
+                            
+                            width: 300.0,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                              vertical: 10,
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                        );
+                      
                     },
                     child: Chip(
                       backgroundColor: Theme.of(context).colorScheme.secondary,

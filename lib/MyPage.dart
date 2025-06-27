@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shopping_app/DetailPage.dart';
 import 'package:shopping_app/cart_page.dart';
@@ -23,21 +24,8 @@ class _ShoppingAppState extends State<ShoppingApp> {
   final bool _snap = false;
   final bool _floating = true;
 
-  void cartUpdate() {
-    setState(() {
-      haveCartItems = getNonCart()[1];
-      nCartItems = getNonCart()[0];
-    });
-  }
-
-  late bool haveCartItems;
-  late int nCartItems;
-
   late String selectedFilter;
-  late List<Widget> prodList = getRelevantProd(context, selectedFilter, productDetails, cartUpdate);
-
-  // late bool crs;
-  // late Icon crsIcon;
+  late List<Widget> prodList = getRelevantProd(context, selectedFilter, productDetails);
 
   final SearchController searchController = SearchController();
 
@@ -46,10 +34,7 @@ class _ShoppingAppState extends State<ShoppingApp> {
     super.initState();
 
     selectedFilter = categories[0];
-    prodList = getRelevantProd(context, selectedFilter, productDetails, cartUpdate);
-
-    haveCartItems = getNonCart()[1];
-    nCartItems = getNonCart()[0];
+    prodList = getRelevantProd(context, selectedFilter, productDetails);
 
     searchController.text = '';
 
@@ -93,8 +78,8 @@ class _ShoppingAppState extends State<ShoppingApp> {
                 width: 56,
                 child: Badge(
                   offset: Offset(-10, 1),
-                  label: Text(nCartItems.toString()),
-                  isLabelVisible: haveCartItems,
+                  label: Text(Provider.of<CartProvider>(context).nCartitems.toString()),
+                  isLabelVisible: Provider.of<CartProvider>(context).showCartBadge,
                   textColor: Theme.of(context).colorScheme.onSecondary,
                   backgroundColor: Color.fromRGBO(52, 152, 219, 0.8),
                   child: InkWell(
@@ -314,7 +299,7 @@ class _ShoppingAppState extends State<ShoppingApp> {
                                   onTap: () {
                                     setState(() {
                                       selectedFilter = filter;
-                                      prodList = getRelevantProd(context, selectedFilter, productDetails, cartUpdate);
+                                      prodList = getRelevantProd(context, selectedFilter, productDetails);
                                     });
                                     debugPrint('filter: $filter selected');
                                   },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'MyComponents.dart';
 import 'package:shopping_app/cart_page.dart';
 
@@ -26,17 +27,11 @@ class _DetailsPageState extends State<DetailsPage> {
 
   late String selectedSize;
 
-  late bool haveCartItems;
-  late int nCartItems;
-
   @override
   void initState() {
     super.initState();
 
     selectedSize = 'NULL';
-
-    haveCartItems = getNonCart()[1];
-    nCartItems = getNonCart()[0];
 
   }
 
@@ -90,8 +85,8 @@ class _DetailsPageState extends State<DetailsPage> {
               width: 56,
               child: Badge(
                 offset: Offset(-10, 1),
-                label: Text(nCartItems.toString()),
-                isLabelVisible: haveCartItems,
+                label: Text(Provider.of<CartProvider>(context).nCartitems.toString()),
+                isLabelVisible: Provider.of<CartProvider>(context).showCartBadge,
                 textColor: Theme.of(context).colorScheme.onSecondary,
                 backgroundColor: Color.fromRGBO(52, 152, 219, 0.8),
                 child: InkWell(
@@ -259,17 +254,69 @@ class _DetailsPageState extends State<DetailsPage> {
                                       'sumprice': widget.products['price'],
                                     });
                                   }
+                                
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      elevation: 0,
+                                      backgroundColor: Theme.of(context).colorScheme.primary,
+                                      
+                                      showCloseIcon: true,
+                                      closeIconColor: Theme.of(context).colorScheme.onPrimary,
+                                      content: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                                        child: Text(
+                                          'The item has been added',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).colorScheme.onPrimary,
+                                          ),
+                                          ),
+                                      ),
+                                      duration: const Duration(seconds: 1),
+                                      
+                                      width: 300.0,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0,
+                                        vertical: 10,
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                    ),
+                                  );
+
                                 } else {
-                                  // TODO: popup to tell them that they have to select the size
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      elevation: 0,
+                                      backgroundColor: Theme.of(context).colorScheme.primary,
+                                      
+                                      showCloseIcon: true,
+                                      closeIconColor: Theme.of(context).colorScheme.onPrimary,
+                                      content: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                                        child: Text(
+                                          'Please, select the size',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).colorScheme.onPrimary,
+                                          ),
+                                          ),
+                                      ),
+                                      duration: const Duration(seconds: 1),
+                                      
+                                      width: 300.0,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0,
+                                        vertical: 10,
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                    ),
+                                  );
                                 }
                                 
-                                  setState(() {
-
-                                    haveCartItems = getNonCart()[1];
-                                    nCartItems = getNonCart()[0];
-
-                                  });
-                                  // debugPrint('$oncart');
+                                Provider.of<CartProvider>(context, listen: false).updateCartIcon();
+                                // debugPrint('$oncart');
                                 },
                               icon: Icon(
                                 Icons.add_circle_outline_rounded,

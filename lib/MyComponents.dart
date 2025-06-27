@@ -5,6 +5,15 @@ import 'DetailPage.dart';
 class CartProvider extends ChangeNotifier {
   double totprice = gettotal();
 
+  bool showCartBadge = getNonCart()[1];
+  int nCartitems = getNonCart()[0];
+
+  void updateCartIcon() {
+    showCartBadge = getNonCart()[1];
+    nCartitems = getNonCart()[0];
+    notifyListeners();
+  }
+
   void updatetot() {
     totprice = gettotal();
     notifyListeners();
@@ -30,7 +39,7 @@ Color getColor(enumthemeColr) {
     }
 }
 
-List<Widget> getRelevantProd(context, String filter, List allproduct, Function func) {
+List<Widget> getRelevantProd(context, String filter, List allproduct) {
 
   List matchList = [];
   for (int ll = 0; ll < allproduct.length; ll++) {
@@ -69,11 +78,7 @@ List<Widget> getRelevantProd(context, String filter, List allproduct, Function f
                   );
                 }
             ),
-          ).then((ns) {
-            if (ns != null) {
-              func();
-            }
-          });
+          );
           
           },
         );
@@ -264,10 +269,49 @@ List<Widget> getCart(context, List cart) {
       cartItem: getCartItem(0),
     )];
   } else {
-    return List<CartItem>.generate(cart.length, (int index) {
-      return CartItem(
-        cartItem: getCartItem(index),
-        );
+    return List<Dismissible>.generate(cart.length, (int index) {
+      return Dismissible(
+        background: Container(color: Theme.of(context).colorScheme.secondary),
+        onDismissed: (direction) {
+
+          oncart.remove(getCartItem(index));
+          Provider.of<CartProvider>(context, listen: false).updateCartIcon();
+          Provider.of<CartProvider>(context, listen: false).updatetot();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              elevation: 0,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              
+              showCloseIcon: true,
+              closeIconColor: Theme.of(context).colorScheme.onSecondary,
+              content: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'The item has been removed',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                  ),
+              ),
+              duration: const Duration(seconds: 1),
+              
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10.0,
+                vertical: 10,
+              ),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+            ),
+          );
+        },
+        key: Key(getCartItem(index)['product_id']),
+        child: CartItem(
+          cartItem: getCartItem(index),
+          ),
+      );
       }
     );
   }
