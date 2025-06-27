@@ -426,8 +426,8 @@ class _CartItemState extends State<CartItem> {
               Container(
                 // color: getColor(ThemeColr.hilightSecondary),
                 height: 160,
-                width: 140,
-                margin: EdgeInsets.fromLTRB(18, 2, 5, 2),
+                width: 130,
+                margin: EdgeInsets.fromLTRB(16, 2, 5, 2),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,

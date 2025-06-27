@@ -109,7 +109,7 @@ class _CartPageState extends State<CartPage> {
               children: [
 
                 Container(
-                  width: 180,
+                  width: 165,
                   padding: EdgeInsets.fromLTRB(30, 10, 5, 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
