@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         return CartProvider();
       },
       child: MaterialApp(
-        debugShowCheckedModeBanner: true,
+        debugShowCheckedModeBanner: false,
         title: 'DMO Shop',
         theme: ThemeData(
           colorScheme: ColorScheme(
