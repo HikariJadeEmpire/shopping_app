@@ -226,7 +226,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                   bool isInCart = false;
                                   for (int iCart = 0; iCart < oncart.length; iCart++) {
                                     if (widget.products['id'] == oncart[iCart]['product_id'] 
-                                    && widget.products['selectedSize'] == selectedSize) {
+                                    && selectedSize == oncart[iCart]['selectedSize']) {
                                       
                                       oncart[iCart]['amount']++;
                                       isInCart = true;
